@@ -13,7 +13,11 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      body: {} // this is the body from /user
+      body: {
+        registration: {
+          data: "",
+        },
+      }, // this is the body from /user
     };
     this.handleTextInput = this.handleTextInput.bind(this);
   }
@@ -22,12 +26,18 @@ class App extends React.Component {
     fetch(`http://localhost:${config.serverPort}/user`, {
       credentials: 'include' // fetch won't send cookies unless you set credentials
     })
-      .then(response => response.json())
-      .then(response => this.setState(
-        {
-          body: response
-        })
-      );
+      .then((response) => response.json())
+      .then((response) => {
+        console.log("USER RESPONSE: ", response);
+        const body = {
+          ...this.state.body,
+          ...response,
+        };
+
+        this.setState({
+          body,
+        });
+      });
   }
 
   handleTextInput(event) {
